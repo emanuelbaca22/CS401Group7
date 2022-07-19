@@ -9,7 +9,7 @@ public class Message {
 	
 	// methods of message class
 	public Message() {
-		// set Message object attributes here
+	// set Message object attributes here
 		
 	}
 	// list all getter methods
