@@ -1,3 +1,4 @@
+//ayumi
 import java.io.Serializable;
 // Message Object
 public class Message implements Serializable{
