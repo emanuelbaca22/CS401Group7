@@ -32,4 +32,6 @@ public class Message {
 	public String getType() {
 		return this.type;
 	}
+	
+	// setters are not needed as we want the Message Object Data to be IMMUTABLE (not be changed at all, only be able to view)
 }
