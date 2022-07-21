@@ -3,16 +3,17 @@ public class User {
 	// list properties based on Design Document
 	protected String firstName;
 	protected String lastName;
-	static private int empNum = 0;
+	//static private int empNum = 0;
+	protected int empNum;
 	protected String password;
 	protected String role;
 	protected String status;
-	
 	// list all methods
 	// Constructor to set all attributes 
 	public User () {
 		this.firstName = "N/A";
 		this.lastName = "N/A";
+		this.empNum = 0000;
 		this.password = "N/A";
 		this.role = "User";
 		this.status = "N/A";
@@ -24,6 +25,14 @@ public class User {
 		this.lastName = last;
 		this.password = password;
 		this.role = role;	
+	}
+	
+	// Constructor used for initial User Object Login
+	
+	public User(int empID, String password)
+	{
+		this.empNum = empID;
+		this.password = password;
 	}
 	
 	// setters

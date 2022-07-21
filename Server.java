@@ -14,6 +14,8 @@ public class Server {
 		userList.add(user1);
 		userList.add(user2);
 		
+		///checkRecords(userList);
+		
 		// Create our list of Messages that we will later write to a text file
 		List<Message> msgList = new ArrayList<Message>();
 		// We will implement a multi-threaded server as per Requirements
@@ -96,7 +98,9 @@ public class Server {
 					System.out.println("User ID: " + login.getEmpNum() + "Password Entered:" + login.getPassword());
 					// Search through our user data base to see if the employee number and password matches
 					// if a yes continue to login to the server
-					// if a no, then send a message back to the client informing them that either the employee id or password is incorrect and to try again
+					// if a no, then send a message back to the client informing them that either the 
+					// employee id or password is incorrect and to try again
+					
 					
 				}
 			}
@@ -118,4 +122,5 @@ public class Server {
 			}
 		}
 	}
+	// helper methods ?
 }
