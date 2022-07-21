@@ -1,8 +1,7 @@
-//ayumi
 import java.io.Serializable;
 // Message Object
 public class Message implements Serializable{
-	// list properties based 
+	// list properties based on Design Document
 	private String from;
 	private String to;
 	private int msgSize;
