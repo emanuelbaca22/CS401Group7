@@ -8,17 +8,30 @@ public class Message implements Serializable{
 	private String data;
 	private String type;
 	
-	// methods of message class
+	// Constructor used to send a new chat message
 	public Message(String clientFrom, String clientTo, String clientData) {
-	// set Message object attributes here
 	this.from = clientFrom;
 	this.to = clientTo;
 	this.data = clientData;
-	// implement msg size here
 	
 	// Use a function to check whether the recipient is offline or online in order to set the message type
 	//this.type = checkType();
+	}
+	
+	// initial login Message constructor
+	// from will hold the empNum of Client
+	// to will hold the password of Client
+	public Message(int empNum, String password)
+	{
+		this.msgSize = empNum;
+		this.data = password;
 		
+	}
+	
+	// Constructor used to communicate back n forth to client n server
+	public Message(String data)
+	{
+		this.data = data;
 	}
 	// implement checkEmployeeStatus()
 	
@@ -43,5 +56,6 @@ public class Message implements Serializable{
 		return this.type;
 	}
 	
-	// setters are not needed as we want the Message Object Data to be IMMUTABLE (not be changed at all, only be able to view)
+	// setters are not needed as we want the Message Object Data to be IMMUTABLE 
+	// (not be changed at all, only be able to view)
 }

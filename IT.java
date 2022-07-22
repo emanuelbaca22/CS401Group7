@@ -7,9 +7,9 @@ public class IT extends User{
 		this.role = "IT";
 	}
 	// methods strictly for IT
-	public User createEmployee(String first, String last, String password, String role) {
+	public User createEmployee(String first, String last, int id, String password, String role) {
 		// create new Employee, either a User or IT role
-		User newUser = new User(first, last, password, role);
+		User newUser = new User(first, last, id, password, role);
 		// pass newly created employee to server
 		return newUser;
 	}

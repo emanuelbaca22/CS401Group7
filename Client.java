@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Client {
 	// Implement multi-threading
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		// Create a scanner object in order to get input stream
 		// Use System.in as it is a standard input stream
         Scanner sc= new Scanner(System.in);
@@ -34,23 +34,55 @@ public class Client {
         // Create object output stream from the output stream to send an object through it
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
         
-        // Next Attempt to Login to the server
-        // Load in data into a User object to send to the server in order to verify employee ID and password
-        System.out.println("Enter Employee ID# ");
-        int empID = sc.nextInt();
-        System.out.println("Enter Password: ");
-        String password = sc.next();
+        // Create input Stream to receive messages from the server
+        InputStream inputStream = null;
+        ObjectInputStream objectInputStream = null;
         
-        // Load into a User object
-        User login = new User(empID, password);
-        
-        // Pass object to Server and await if login is successful
-        objectOutputStream.writeObject(login);
-        objectOutputStream.flush();
-        
-        // Await Server response
-        
-        // After login is successful, continue to interface
+        Boolean loop = true;
+        Boolean loggedIn = false;
+        while(loop)
+        {
+        	// Next Attempt to Login to the server
+            // Load in data into a User object to send to the server in order to verify employee ID and password
+            System.out.println("Enter Employee ID# ");
+            int empID = sc.nextInt();
+            // skip newline error by using another sc.nextLine()
+            sc.nextLine();
+            System.out.println("Enter Password: ");
+            String password = sc.nextLine();
+            
+            // Load into a Message object
+            // Passing in as msgSize and data of Message Class
+            Message login = new Message(empID, password);
+            
+            // Pass object to Server and await if login is successful
+            System.out.println("Sending Login Credentials to Server");
+            objectOutputStream.writeObject(login);
+            objectOutputStream.flush();
+            
+            inputStream = socket.getInputStream();
+            // Await Server response
+            objectInputStream = new ObjectInputStream(inputStream);
+            Message msgServer = (Message) objectInputStream.readObject();
+            
+            // Server responded, so print out what it said back
+            System.out.println("Server Response: " + msgServer.getData());
+            
+            // After login is successful, continue to interface
+            if(msgServer.getData().equals("Login Successful, continue to Interface"))
+            {
+            	// Print a message saying Loading Application
+            	System.out.println("Loading Application...");
+            	// Set our loggedIn loop to true
+            	loggedIn = true;
+            }
+            
+            while(loggedIn) {
+            	// Apply User interface, whether it is an IT interface or a User
+            	// Tell Server to set status to active
+            	System.out.println("Check worked, in command loop now :)");
+            }
+        }
         
         // Close any open Sockets or readers
         System.out.println("Logout Successful, closing connection Socket");

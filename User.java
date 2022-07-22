@@ -3,8 +3,8 @@ public class User {
 	// list properties based on Design Document
 	protected String firstName;
 	protected String lastName;
-	//static private int empNum = 0;
 	protected int empNum;
+	//protected int empNum;
 	protected String password;
 	protected String role;
 	protected String status;
@@ -13,26 +13,21 @@ public class User {
 	public User () {
 		this.firstName = "N/A";
 		this.lastName = "N/A";
-		this.empNum = 0000;
+		// this.empNum = 0000;
 		this.password = "N/A";
 		this.role = "User";
 		this.status = "N/A";
+		empNum++;
 		
 	}
 	
-	public User(String first, String last, String password, String role) {
+	// Used to create a new employee by Server
+	public User(String first, String last, int id, String password, String role) {
 		this.firstName = first;
 		this.lastName = last;
+		this.empNum = id;
 		this.password = password;
 		this.role = role;	
-	}
-	
-	// Constructor used for initial User Object Login
-	
-	public User(int empID, String password)
-	{
-		this.empNum = empID;
-		this.password = password;
 	}
 	
 	// setters

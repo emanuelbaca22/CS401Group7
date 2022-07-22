@@ -9,15 +9,15 @@ public class Server {
 		// Create our User Records list
 		List<User> userList = new ArrayList<User>();
 		// Add a couple of employees to test login
-		User user1 = new User("Manny", "Baca", "password", "User");
-		User user2 = new User("John", "Smith", "password", "User");
-		userList.add(user1);
-		userList.add(user2);
+		// User user1 = new User("Manny", "Baca", "password", "User");
+		// User user2 = new User("John", "Smith", "password", "User");
+		// userList.add(user1);
+		// add(user2);
 		
 		///checkRecords(userList);
 		
 		// Create our list of Messages that we will later write to a text file
-		List<Message> msgList = new ArrayList<Message>();
+		//List<Message> msgList = new ArrayList<Message>();
 		// We will implement a multi-threaded server as per Requirements
 		// Step 1: Create ServerSocket Object
 		ServerSocket ss = null;
@@ -69,20 +69,32 @@ public class Server {
 		
 		// Implement our run method
 		public void run() {
+			// loop condition
+			Boolean loggedIn = false;
+			
+			// local msg object received from Server replies
+			Message msgServer = null;
+			
+			// local Variable to access our Employee Data Base
+			EmpDataBase localAccess = new EmpDataBase();
+			
 			// Input Stream to receive messages object from Clients
 			InputStream inputStream = null;
 			ObjectInputStream objectInputStream = null;
 			
-			// String input stream to check for username and password in order to login to the server
-			// DataInputStream dataInputStream;
-			// DataOutputStream dataOutputStream;
-			// BufferedReader bufferedReader;
-			
+			// Output Stream to sent messages to Client
+			OutputStream outputStream = null;
+			ObjectOutputStream objectOutputStream = null;
 			// try and catch block
 			try {
 				// set an infinite loop till User logs out
 				Boolean loop = true;
 				while(loop) {
+					// Temporary for Debugging Purposes
+					// Display Employees in Data Base
+					localAccess.displayEmployees();
+					
+					
 					// Set up our Object Data input
 					inputStream = clientSocket.getInputStream();
 					// Then create it in an object
@@ -93,13 +105,61 @@ public class Server {
 					// I went ahead and implemented a userList that we can look at to see if the Client
 					// that wants to login exists in our "database"
 					System.out.println("Awaiting to authorize incoming Client...");
-					User login = (User) objectInputStream.readObject();
+					
+					// Use the Message class as a temporary object to hold the Client's empNum and password
+					// empNum = msg.getFrom()
+					// password = msg.getTo()
+					// Reason for this is so we do not have to to implement Serializable on another class
+					// other method is to pass a strings to Server then continue but this seems easier
+					
+					// Read in data from Client
+					Message login = (Message) objectInputStream.readObject();
 					// Just to check if the Message was received, display it!
-					System.out.println("User ID: " + login.getEmpNum() + "Password Entered:" + login.getPassword());
+					// Remember empNum is stored login.msgSize and password is stored in login.Data 
+					System.out.println("User ID: \n" + login.getMsgSize() + "Password Entered:" + login.getData());
+					
 					// Search through our user data base to see if the employee number and password matches
-					// if a yes continue to login to the server
-					// if a no, then send a message back to the client informing them that either the 
+					// if a true continue to login to the server
+					// if a false, then send a message back to the client informing them that either the 
 					// employee id or password is incorrect and to try again
+					if(localAccess.loginEmployee(login.getMsgSize(), login.getData()))
+					{
+						// Login was successful, continue to interface
+						// Send a message to the Client allowing it to continue
+						// System.out.println("Able to See the Type in an if statement");
+						// Send message back to client allowing Login
+						outputStream = clientSocket.getOutputStream();
+						objectOutputStream = new ObjectOutputStream(outputStream);
+						msgServer = new Message("Login Successful, continue to Interface");
+						// Send to Client
+						objectOutputStream.writeObject(msgServer);
+						objectOutputStream.flush();
+						System.out.println("Message Sent to Client\n");
+						// Set our while loop to allow Client to keep inputting data
+						loggedIn = true;
+					}
+					else
+					{
+						// Send message to Client that login has failed and to try again
+						System.out.println("Login Attempt Failed");
+						outputStream = clientSocket.getOutputStream();
+						objectOutputStream = new ObjectOutputStream(outputStream);
+						msgServer = new Message("Failed to Login, please try again");
+						// Send to Client
+						objectOutputStream.writeObject(msgServer);
+						objectOutputStream.flush();
+						System.out.println("Message Sent to Client\n");
+					}
+					
+					
+					// Start thinking of all possible Client actions, follow UML Designs for User and IT
+					while(loggedIn) {
+						// Begin to process all commands, use a switch statement for ease of implementation
+						// Process Client choice of commands till they logout
+						// Set Logged in User to Active
+						System.out.println("Check worked, in command loop now :)");
+						
+					}
 					
 					
 				}
