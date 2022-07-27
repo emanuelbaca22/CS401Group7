@@ -18,7 +18,6 @@ public class User implements Serializable {
 		this.password = "N/A";
 		this.role = "User";
 		this.status = "N/A";
-		empNum++;
 		
 	}
 	
@@ -65,7 +64,6 @@ public class User implements Serializable {
 	// methods
 	public void sendMessage(Message msg) {
 		// return a Message object to Client in order to send to the Sever
-		
 	}
 	
 	public void viewChats() {

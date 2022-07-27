@@ -1,4 +1,7 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,10 +10,10 @@ import java.util.List;
 // EmpDataBase will hold all employees and be accessed through this class
 public class EmpDataBase {
 	// Create a List, super easy to work with unlike a Linked List or Queue which my team disagreed on
-	private static List<User> empDataBase = new ArrayList<User>();
+	private List<User> empDataBase = new ArrayList<User>();
 	
 	// Create a Message List to hold all of the messages being sent and let's us log them as well
-	private static List<Message> msgDataBase = new ArrayList<Message>();
+	private List<Message> msgDataBase = new ArrayList<Message>();
 	
 	// No constructor needed
 	// Constructor of base employees 
@@ -25,7 +28,7 @@ public class EmpDataBase {
 	}
 	// Methods of EmpDataBase
 	// Adding Employees
-	public void addEmployee(User newEmp) {
+	public void createEmployee(User newEmp) {
 		// add a new employee to list
 		// This is assuming that IT is putting in all data fields of new User
 		// then telling the server to add an employee
@@ -191,13 +194,86 @@ public class EmpDataBase {
 	public String chatHistory(User user)
 	{
 		// Search through our msgDataBase and format messages
-		String chatLog = "";
+		String chatSent = "Chats Sent:\n";
+		String chatReceived = "\n\nChats Received:\n";
+		String tempFirst = "";
+		String tempLast = "";
 		
+		// This for loop is responsible for Messages From User
 		for(int i = 0; i < msgDataBase.size(); i++)
 		{
+			// set our string values in order to use equals method
+			tempFirst = msgDataBase.get(i).getFromFirstName();
+			tempLast = msgDataBase.get(i).getFromLastName();
+							
+			if(tempFirst.equals(user.getFirstName()) && tempLast.equals(user.getLastName()))
+			{
+				// This is a String with all messages sent by passed in User Object
+				chatSent += "\n" + msgDataBase.get(i).getToFirstName() + " " +  msgDataBase.get(i).getToLastName() + " \n" + msgDataBase.get(i).getData() + "\n" + msgDataBase.get(i).getType();
 			
+			}
+		}
+		
+		// This for loop is responsible for Messages To User
+		for(int i = 0; i < msgDataBase.size(); i++)
+		{
+			// set our string values in order to use equals method
+			tempFirst = msgDataBase.get(i).getToFirstName();
+			tempLast = msgDataBase.get(i).getToLastName();
+							
+			if(tempFirst.equals(user.getFirstName()) && tempLast.equals(user.getLastName()))
+			{
+				// This is a String with all messages sent by passed in User Object
+				chatSent += "\n" + msgDataBase.get(i).getToFirstName() + " " +  msgDataBase.get(i).getToLastName() + " \n" + msgDataBase.get(i).getData() + "\n" + msgDataBase.get(i).getType();
+			}
+		}
+		// Return all chats sent and received 
+		return chatSent + chatReceived; 
+	}
+	public String chatLog() throws IOException
+	{
+		// Temp Variables used to store entire chat log
+		String chatLog = "";
+		
+		// Standard Reading of a Text File
+		BufferedReader br = new BufferedReader(new FileReader("chatLog.txt"));
+		try {
+		    StringBuilder sb = new StringBuilder();
+		    String line = br.readLine();
+
+		    while (line != null) {
+		        sb.append(line);
+		        sb.append(System.lineSeparator());
+		        line = br.readLine();
+		    }
+		    chatLog = sb.toString();
+		} finally {
+		    br.close();
 		}
 		return chatLog;
+	}
+	
+	// Create a GroupChat
+	
+	// Log off User, basically set them In-Active
+	public void logOff(User user)
+	{
+		String tempFirst = "";
+		String tempLast = "";
+		
+		for(int i = 0; i < empDataBase.size(); i++)
+		{
+			// set our string values in order to use equals method
+			tempFirst = empDataBase.get(i).getFirstName();
+			tempLast = empDataBase.get(i).getLastName();
+			
+			if(tempFirst.equals(user.getFirstName()) && tempLast.equals(user.getLastName()))
+			{
+				// Set User Status back to In-Active
+				empDataBase.get(i).setStatus("In-Active");
+			}
+		}
+			
 	}
 	// Show Employee Attributes
 	public void displayEmployee(User emp) {

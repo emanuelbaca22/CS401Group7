@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
+	
+	// Let's us keep track of logged in users
+	private static EmpDataBase localAccess = new EmpDataBase();
+	
+	
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		// We will implement a multi-threaded server as per Requirements
 		// Step 1: Create ServerSocket Object
@@ -46,7 +51,6 @@ public class Server {
 		}
 	}
 	
-	// Implement ClientHandler Class
 	private static class ClientHandler implements Runnable {
 		private final Socket clientSocket;
 		
@@ -62,9 +66,13 @@ public class Server {
 			
 			// local msg object received from Server replies
 			Message msgServer = null;
+			Message msg = null;
+			
+			User clientUser = null;
+			User newUser = null;
 			
 			// local Variable to access our Employee Data Base
-			EmpDataBase localAccess = new EmpDataBase();
+			// EmpDataBase localAccess = new EmpDataBase();
 			// Input Stream to receive messages object from Clients
 			InputStream inputStream = null;
 			ObjectInputStream objectInputStream = null;
@@ -124,7 +132,7 @@ public class Server {
 						System.out.println("Message Sent to Client\n");
 						
 						// return the Clients information by sending them back a User object
-						User clientUser = localAccess.returnEmployee(login.getMsgSize(), login.getData());
+						clientUser = localAccess.returnEmployee(login.getMsgSize(), login.getData());
 						objectOutputStream.writeObject(clientUser);
 						objectOutputStream.flush();
 						System.out.println("Returned User Account Information to Client");
@@ -160,41 +168,141 @@ public class Server {
 						// Use .getMsgSize to access the User's choice
 						Message userChoice = (Message) objectInputStream.readObject();
 						
-						switch(userChoice.getMsgSize())
+						// Depending if User Interface or IT Interface, adjust to incoming Client Data
+						// User Interface is below
+						if(clientUser.getRole().equals("User"))
 						{
-						case 1:
-							// This will be the sendMessage() method handler
-							// Get msg object from client
-							Message msg = (Message) objectInputStream.readObject();
-							System.out.println("Message Received, sending to Recipient...");
-							
-							// First verify that the User Exists in our empDataBase
-							if(localAccess.checkUser(msg.getToFirstName(), msg.getToLastName()))
+							switch(userChoice.getMsgSize())
 							{
-								localAccess.sendMessage(msg);
-							}
-							System.out.println("Message has been sent");
-							// After Sending message, log it in our chatHistoryLog.txt
-							// implement writing to log file, may not be needed as all chats are stored
-							// in msgDataBase list so we can just write that to a text
+							case 1:
+								// This will be the sendMessage() method handler
+								// Get msg object from client
+								msg = (Message) objectInputStream.readObject();
+								System.out.println("Message Received, sending to Recipient...");
 							
-							break;
-						case 2:
-							// This will be the chatHistory() method handler
-							// Send a Message Object Back to the Client holder their Chat History
-							User clientUser = (User) objectInputStream.readObject();
-							localAccess.chatHistory(clientUser);
-							break;
-						case 3:
-							// This will be the createGroup() method handler
-							break;
-						case 4:
-							// This will be the logOut() method handler
-							break;
-						default:
-							// Should not be needed as it will be checked previously in Client.java but just in case
-							// error checking message here
-							break;										
+								// First verify that the User Exists in our empDataBase
+								if(localAccess.checkUser(msg.getToFirstName(), msg.getToLastName()))
+								{
+									localAccess.sendMessage(msg);
+								}
+								System.out.println("Message has been sent");
+								// After Sending message, log it in our chatHistoryLog.txt
+								// implement writing to log file, may not be needed as all chats are stored
+								// in msgDataBase list so we can just write that to a text
+							
+								break;
+							case 2:
+								// This will be the chatHistory() method handler
+								// Send a Message Object Back to the Client holder their Chat History
+								clientUser = (User) objectInputStream.readObject();
+							
+								// Create a Message Object with the Client's Chat History
+								msgServer = new Message(localAccess.chatHistory(clientUser));
+							
+								// Send Chat Data to Client
+								objectOutputStream.writeObject(msgServer);
+								objectOutputStream.flush();
+								System.out.println("Chat History Sent to Client\n");
+								break;
+							case 3:
+								// This will be the createGroup() method handler
+								break;
+							case 4:
+								// This will be the logOut() method handler
+								clientUser = (User) objectInputStream.readObject();
+							
+								// Log User off the System
+								localAccess.logOff(clientUser);
+							
+								System.out.println("\n Client has been successfully logged out");
+								// break out of loops
+								loggedIn = false;
+								loop = false;
+							
+								break;
+							default:
+								// Should not be needed as it will be checked previously in Client.java but just in case
+								// error checking message here
+								break;										
+							}
+						}
+						else
+						{
+							// Implement IT Interaction Interface
+							switch(userChoice.getMsgSize())
+							{
+							case 1:
+								// This will be the sendMessage() method handler
+								// Get msg object from client
+								msg = (Message) objectInputStream.readObject();
+								System.out.println("Message Received, sending to Recipient...");
+							
+								// First verify that the User Exists in our empDataBase
+								if(localAccess.checkUser(msg.getToFirstName(), msg.getToLastName()))
+								{
+									localAccess.sendMessage(msg);
+								}
+								System.out.println("Message has been sent");
+								// After Sending message, log it in our chatHistoryLog.txt
+								// implement writing to log file, may not be needed as all chats are stored
+								// in msgDataBase list so we can just write that to a text
+							
+								break;
+							case 2:
+								// This will be the chatHistory() method handler
+								// Send a Message Object Back to the Client holder their Chat History
+								clientUser = (User) objectInputStream.readObject();
+							
+								// Create a Message Object with the Client's Chat History
+								msgServer = new Message(localAccess.chatHistory(clientUser));
+							
+								// Send Chat Data to Client
+								objectOutputStream.writeObject(msgServer);
+								objectOutputStream.flush();
+								System.out.println("Chat History Sent to Client\n");
+								break;
+							case 3:
+								// This will be the createGroup() method handler
+								break;
+							case 4:
+								// This will be createNewUser()
+								// get new User Info from Client
+								newUser = (User) objectInputStream.readObject();
+								
+								// Create a new User and it them to our empDataBase
+								localAccess.createEmployee(newUser);
+								
+								System.out.println("\nNew User Created and added into EmpDataBase");
+							
+								break;
+							case 5:
+								// View ENTIRE CHAT LOG
+								// Retrieving Chat Log and putting it in msg.data
+								// Send string in a message object
+								msg = new Message(localAccess.chatLog());
+								
+								// Send off the Client
+								objectOutputStream.writeObject(msg);
+								objectOutputStream.flush();
+								
+								break;
+							case 6:
+								// logOff()
+								clientUser = (User) objectInputStream.readObject();
+								
+								// Log User off the System
+								localAccess.logOff(clientUser);
+							
+								System.out.println("\n Client has been successfully logged out");
+								// break out of loops
+								loggedIn = false;
+								loop = false;
+								break;
+							default:
+								// Should not be needed as it will be checked previously in Client.java but just in case
+								// error checking message here
+								break;										
+							}
 						}
 						
 					}
@@ -218,5 +326,5 @@ public class Server {
 			}
 		}
 	}
-	// helper methods ?
 }
+

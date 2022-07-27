@@ -39,6 +39,8 @@ public class Client {
         ObjectInputStream objectInputStream = null;
         
         User clientUser = null;
+        User newUser = null;
+        Message chat = null;
         Boolean loop = true;
         Boolean loggedIn = false;
         while(loop)
@@ -94,70 +96,197 @@ public class Client {
             	// User login or an IT User Interface
             	
             	// Implement later, make sure to test and get up User Interface 1st!
-            	
-            	// Implement User interface
-            	System.out.println("Enter a option number: ");
-            	System.out.println("1) Send a Message"
-            			+ "\n2) View Chat History"
-            			+ "\n3) Create a New Group "
-            			+ "\n4) Log Out");
-            	// load in User choice into a variable
-            	int choice = sc.nextInt();
-            	// Put it into our Message Object then send it off to the Server to manage next steps
-            	Message userChoice = new Message(choice);
-            	
-            	// Send to Server
-            	objectOutputStream.writeObject(userChoice);
-            	objectOutputStream.flush();
-            	System.out.println("Sending option to Server");
-            	
-            	// load switch interface
-            	switch(choice)
+            	// Implementation of User Interface
+            	if(clientUser.getStatus().equals("User"))
             	{
-            	case 1:
-					// This will be the sendMessage() method handler
-            		// sendMessage() will return a Message Object that we can send to the Server
-            		System.out.println("Enter First Name of Recipient: ");
-            		String toFirst = sc.next();
-            		System.out.println("Enter Last Name of Recipient: ");
-            		String toLast = sc.next();
-            		// use sc.nextLine to clear the skipping line
-            		sc.nextLine();
-            		System.out.println("Enter the Message: ");
-            		String data = sc.nextLine();
-            		
-            		// Create a Message object to be send to the Server 
-            		Message msg = new Message(clientUser.getFirstName(), clientUser.getLastName(), toFirst, toLast, data);
-            		
-            		// Send Message object to the Server
-            		objectOutputStream.writeObject(msg);
+            		// Implement User interface
+            		System.out.println("Enter a option number: ");
+            		System.out.println("1) Send a Message"
+            				+ "\n2) View Chat History"
+            				+ "\n3) Create a New Group "
+            				+ "\n4) Log Out");
+            		// load in User choice into a variable
+            		int choice = sc.nextInt();
+            		// Put it into our Message Object then send it off to the Server to manage next steps
+            		Message userChoice = new Message(choice);
+            	
+            		// Send to Server
+            		objectOutputStream.writeObject(userChoice);
             		objectOutputStream.flush();
+            		System.out.println("Sending option to Server");
+            	
+            		// load switch interface
+            		switch(choice)
+            		{
+            		case 1:
+            			// This will be the sendMessage() method handler
+            			// sendMessage() will return a Message Object that we can send to the Server
+            			System.out.println("Enter First Name of Recipient: ");
+            			String toFirst = sc.next();
+            			System.out.println("Enter Last Name of Recipient: ");
+            			String toLast = sc.next();
+            			// use sc.nextLine to clear the skipping line
+            			sc.nextLine();
+            			System.out.println("Enter the Message: ");
+            			String data = sc.nextLine();
             		
-            		System.out.println("Message has been sent");
+            			// Create a Message object to be send to the Server 
+            			Message msg = new Message(clientUser.getFirstName(), clientUser.getLastName(), toFirst, toLast, data);
             		
-					break;
-				case 2:
-					// This will be the chatHistory() method handler
-					System.out.println("Chat History is Below: ");
+            			// Send Message object to the Server
+            			objectOutputStream.writeObject(msg);
+            			objectOutputStream.flush();
+            		
+            			System.out.println("Message has been sent");
+            		
+            			break;
+            		case 2:
+            			// This will be the chatHistory() method handler
+            			System.out.println("\nChat History is Below: ");
 					
-					// Sending Server Client Profile
-					objectOutputStream.writeObject(clientUser);
-					objectOutputStream.flush();
+            			// Sending Server Client Profile
+            			objectOutputStream.writeObject(clientUser);
+            			objectOutputStream.flush();
 					
-					// Read in what Server has sent back
+            			// Read in what Server has sent back
+            			chat = (Message) objectInputStream.readObject();
 					
+            			// Print out chat history
+            			System.out.println(chat.getData());
 					
-					break;
-				case 3:
-					// This will be the createGroup() method handler
-					break;
-				case 4:
-					// This will be the logOut() method handler
-					break;
-				default:
-					break;								
+            			break;
+            		case 3:
+            			// This will be the createGroup() method handler
+            			break;
+            		case 4:
+            			// This will be the logOut() method handler
+            			System.out.println("\nLogging out of System");
+					
+            			// Sending Server Client Profile
+            			objectOutputStream.writeObject(clientUser);
+            			objectOutputStream.flush();
+					
+            			// break out of loops
+            			loggedIn = false;
+            			loop = false;
+					
+            			break;
+            		default:
+            			break;								
+            		}
             	}
+            	else
+            	{
+            		// Implement IT Interface
+            		System.out.println("Enter a option number: ");
+            		System.out.println("1) Send a Message"
+            				+ "\n2) View Chat History"
+            				+ "\n3) Create a New Group "
+            				+ "\n4) Create a New User"
+            				+ "\n5) View ALL CHAT LOG FILE"
+            				+ "\n6) Log Out");
+            		// load in User choice into a variable
+            		int choice = sc.nextInt();
+            		// Put it into our Message Object then send it off to the Server to manage next steps
+            		Message userChoice = new Message(choice);
+            	
+            		// Send to Server
+            		objectOutputStream.writeObject(userChoice);
+            		objectOutputStream.flush();
+            		System.out.println("Sending option to Server");
+            	
+            		// load switch interface
+            		switch(choice)
+            		{
+            		case 1:
+            			// This will be the sendMessage() method handler
+            			// sendMessage() will return a Message Object that we can send to the Server
+            			System.out.println("Enter First Name of Recipient: ");
+            			String toFirst = sc.next();
+            			System.out.println("Enter Last Name of Recipient: ");
+            			String toLast = sc.next();
+            			// use sc.nextLine to clear the skipping line
+            			sc.nextLine();
+            			System.out.println("Enter the Message: ");
+            			String data = sc.nextLine();
+            		
+            			// Create a Message object to be send to the Server 
+            			Message msg = new Message(clientUser.getFirstName(), clientUser.getLastName(), toFirst, toLast, data);
+            		
+            			// Send Message object to the Server
+            			objectOutputStream.writeObject(msg);
+            			objectOutputStream.flush();
+            		
+            			System.out.println("Message has been sent");
+            		
+            			break;
+            		case 2:
+            			// This will be the chatHistory() method handler
+            			System.out.println("\nChat History is Below: ");
+					
+            			// Sending Server Client Profile
+            			objectOutputStream.writeObject(clientUser);
+            			objectOutputStream.flush();
+					
+            			// Read in what Server has sent back
+            			chat = (Message) objectInputStream.readObject();
+					
+            			// Print out chat history
+            			System.out.println(chat.getData());
+					
+            			break;
+            		case 3:
+            			// This will be the createGroup() method handler
+            			break;
+            		case 4:
+            			// This will be the createNewUser() method handler
+            			System.out.println("\nEnter New Employee First Name: ");
+            			String newFirst = sc.next();
+            			System.out.println("\nEnter New Employee Last Name: ");
+            			String newLast = sc.next();
+            			System.out.println("\nEnter New Employee Number: ");
+            			int newEmpNum = sc.nextInt();
+            			// Clear nextLine error
+            			sc.nextLine();
+            			System.out.println("\nEnter New Employee Password: ");
+            			String newPassword = sc.nextLine();
+            			System.out.println("\nEnter New Employee Role: ");
+            			String newRole = sc.next();
             			
+            			// Package up newly created user and pass into Server
+            			newUser = new User(newFirst, newLast, newEmpNum, newPassword, newRole);
+            			
+            			// Send off to server
+            			objectOutputStream.writeObject(newUser);
+            			objectOutputStream.flush();
+            			break;
+            		case 5:
+            			// This will be viewLogFile() method handler
+            			System.out.println("\nEntire Log File Displayed Below:");
+            			
+            			// get Server Chat Log
+            			chat = (Message) objectInputStream.readObject();
+            			
+            			// Display Chat Log Contents
+            			System.out.println(chat.getData());
+            			break;
+            		case 6:
+            			// This will be the logOut() method handler
+            			System.out.println("\nLogging out of System");
+					
+            			// Sending Server Client Profile
+            			objectOutputStream.writeObject(clientUser);
+            			objectOutputStream.flush();
+					
+            			// break out of loops
+            			loggedIn = false;
+            			loop = false;
+					
+            			break;
+            		default:
+            			break;								
+            		}
+            	}
             }
         }
         
