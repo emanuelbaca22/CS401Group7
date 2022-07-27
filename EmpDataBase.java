@@ -12,6 +12,9 @@ public class EmpDataBase {
 	// Create a List, super easy to work with unlike a Linked List or Queue which my team disagreed on
 	private List<User> empDataBase = new ArrayList<User>();
 	
+	// This is an Array List of a List of User Objects, in other words:
+	// an index will hold a list of User Objects
+	private List<ArrayList<User>> groupChats = new ArrayList<ArrayList<User>>();
 	// Create a Message List to hold all of the messages being sent and let's us log them as well
 	private List<Message> msgDataBase = new ArrayList<Message>();
 	
@@ -121,6 +124,11 @@ public class EmpDataBase {
 		}
 	}
 	
+	public void createGroup(List<Object> group)
+	{
+		// Create our group chat and 
+	}
+	
 	public void writeToLogFile(Message msg) throws IOException 
 	{
 		// Format of Messages in text file will be the following:
@@ -224,7 +232,7 @@ public class EmpDataBase {
 			if(tempFirst.equals(user.getFirstName()) && tempLast.equals(user.getLastName()))
 			{
 				// This is a String with all messages sent by passed in User Object
-				chatSent += "\n" + msgDataBase.get(i).getToFirstName() + " " +  msgDataBase.get(i).getToLastName() + " \n" + msgDataBase.get(i).getData() + "\n" + msgDataBase.get(i).getType();
+				chatReceived += "\n" + msgDataBase.get(i).getToFirstName() + " " +  msgDataBase.get(i).getToLastName() + " \n" + msgDataBase.get(i).getData() + "\n" + msgDataBase.get(i).getType();
 			}
 		}
 		// Return all chats sent and received 
