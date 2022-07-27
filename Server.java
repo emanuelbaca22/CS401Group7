@@ -6,18 +6,6 @@ import java.util.List;
 
 public class Server {
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
-		// Create our User Records list
-		List<User> userList = new ArrayList<User>();
-		// Add a couple of employees to test login
-		// User user1 = new User("Manny", "Baca", "password", "User");
-		// User user2 = new User("John", "Smith", "password", "User");
-		// userList.add(user1);
-		// add(user2);
-		
-		///checkRecords(userList);
-		
-		// Create our list of Messages that we will later write to a text file
-		//List<Message> msgList = new ArrayList<Message>();
 		// We will implement a multi-threaded server as per Requirements
 		// Step 1: Create ServerSocket Object
 		ServerSocket ss = null;
@@ -77,7 +65,6 @@ public class Server {
 			
 			// local Variable to access our Employee Data Base
 			EmpDataBase localAccess = new EmpDataBase();
-			
 			// Input Stream to receive messages object from Clients
 			InputStream inputStream = null;
 			ObjectInputStream objectInputStream = null;
@@ -116,7 +103,7 @@ public class Server {
 					Message login = (Message) objectInputStream.readObject();
 					// Just to check if the Message was received, display it!
 					// Remember empNum is stored login.msgSize and password is stored in login.Data 
-					System.out.println("User ID: \n" + login.getMsgSize() + "Password Entered:" + login.getData());
+					System.out.println("\nUser ID: " + login.getMsgSize() + "\n  Password Entered:" + login.getData());
 					
 					// Search through our user data base to see if the employee number and password matches
 					// if a true continue to login to the server
@@ -135,6 +122,13 @@ public class Server {
 						objectOutputStream.writeObject(msgServer);
 						objectOutputStream.flush();
 						System.out.println("Message Sent to Client\n");
+						
+						// return the Clients information by sending them back a User object
+						User clientUser = localAccess.returnEmployee(login.getMsgSize(), login.getData());
+						objectOutputStream.writeObject(clientUser);
+						objectOutputStream.flush();
+						System.out.println("Returned User Account Information to Client");
+						
 						// Set our while loop to allow Client to keep inputting data
 						loggedIn = true;
 					}
@@ -157,11 +151,53 @@ public class Server {
 						// Begin to process all commands, use a switch statement for ease of implementation
 						// Process Client choice of commands till they logout
 						// Set Logged in User to Active
-						System.out.println("Check worked, in command loop now :)");
+						// System.out.println("Check worked, in command loop now :)");
+						
+						System.out.println("\nAwating Client Commands...");
+						// Process user choice then go into a switch 
+						// This way the server will prepare to receive appropriate methods
+						// The Message object being read in will have the User choice stored in msgData
+						// Use .getMsgSize to access the User's choice
+						Message userChoice = (Message) objectInputStream.readObject();
+						
+						switch(userChoice.getMsgSize())
+						{
+						case 1:
+							// This will be the sendMessage() method handler
+							// Get msg object from client
+							Message msg = (Message) objectInputStream.readObject();
+							System.out.println("Message Received, sending to Recipient...");
+							
+							// First verify that the User Exists in our empDataBase
+							if(localAccess.checkUser(msg.getToFirstName(), msg.getToLastName()))
+							{
+								localAccess.sendMessage(msg);
+							}
+							System.out.println("Message has been sent");
+							// After Sending message, log it in our chatHistoryLog.txt
+							// implement writing to log file, may not be needed as all chats are stored
+							// in msgDataBase list so we can just write that to a text
+							
+							break;
+						case 2:
+							// This will be the chatHistory() method handler
+							// Send a Message Object Back to the Client holder their Chat History
+							User clientUser = (User) objectInputStream.readObject();
+							localAccess.chatHistory(clientUser);
+							break;
+						case 3:
+							// This will be the createGroup() method handler
+							break;
+						case 4:
+							// This will be the logOut() method handler
+							break;
+						default:
+							// Should not be needed as it will be checked previously in Client.java but just in case
+							// error checking message here
+							break;										
+						}
 						
 					}
-					
-					
 				}
 			}
 			catch (IOException e) {

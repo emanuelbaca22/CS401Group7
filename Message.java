@@ -2,20 +2,30 @@ import java.io.Serializable;
 // Message Object
 public class Message implements Serializable{
 	// list properties based on Design Document
-	private String from;
-	private String to;
+	private String fromFirstName;
+	private String fromLastName;
+	private String toFirstName;
+	private String toLastName;
 	private int msgSize;
 	private String data;
 	private String type;
 	
 	// Constructor used to send a new chat message
-	public Message(String clientFrom, String clientTo, String clientData) {
-	this.from = clientFrom;
-	this.to = clientTo;
+	public Message(String clientFromFirst, String clientFromLast, String toFirst, String toLast, String clientData) {
+	this.fromFirstName = clientFromFirst;
+	this.fromLastName = clientFromLast;
+	this.toFirstName = toFirst;
+	this.toLastName = toLast;
 	this.data = clientData;
-	
-	// Use a function to check whether the recipient is offline or online in order to set the message type
-	//this.type = checkType();
+	}
+	// Constructor used to add a Message Object to our msgDataBase
+	public Message(String clientFromFirst, String clientFromLast, String toFirst, String toLast, String clientData, String clientType) {
+	this.fromFirstName = clientFromFirst;
+	this.fromLastName = clientFromLast;
+	this.toFirstName = toFirst;
+	this.toLastName = toLast;
+	this.data = clientData;
+	this.type = clientType;
 	}
 	
 	// initial login Message constructor
@@ -33,17 +43,29 @@ public class Message implements Serializable{
 	{
 		this.data = data;
 	}
+	
+	// Constructor used to as a choice selector for our switch statements
+	public Message(int size)
+	{
+		this.msgSize = size;
+	}
 	// implement checkEmployeeStatus()
 	
 	// list all getter methods
-	public String getFrom() {
-		return this.from;
+	public String getFromFirstName() {
+		return this.fromFirstName;
 	}
 	
-	public String getTo() {
-		return this.to;
+	public String getFromLastName() {
+		return this.fromLastName;
+	}
+	public String getToFirstName() {
+		return this.toFirstName;
 	}
 	
+	public String getToLastName() {
+		return this.toLastName;
+	}
 	public int getMsgSize() {
 		return this.msgSize;
 	}

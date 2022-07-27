@@ -38,6 +38,7 @@ public class Client {
         InputStream inputStream = null;
         ObjectInputStream objectInputStream = null;
         
+        User clientUser = null;
         Boolean loop = true;
         Boolean loggedIn = false;
         while(loop)
@@ -73,6 +74,14 @@ public class Client {
             {
             	// Print a message saying Loading Application
             	System.out.println("Loading Application...");
+            	// Get back out Client User Account from the server so we can use it
+            	clientUser = (User) objectInputStream.readObject();
+            	// Print out the Client info just to make sure the object was received
+            	System.out.println("Displaying Logged in User Info: "
+            			+ "\n First Name: " + clientUser.getFirstName()
+            			+ "\n Last Name: " + clientUser.getLastName()
+            			+ "\n Employee Number: " + clientUser.getEmpNum()
+            			+ "\n Role: " + clientUser.getRole());
             	// Set our loggedIn loop to true
             	loggedIn = true;
             }
@@ -80,7 +89,75 @@ public class Client {
             while(loggedIn) {
             	// Apply User interface, whether it is an IT interface or a User
             	// Tell Server to set status to active
-            	System.out.println("Check worked, in command loop now :)");
+            	// System.out.println("Check worked, in command loop now :)");
+            	// Start by checking what user interface to display, either a Standard
+            	// User login or an IT User Interface
+            	
+            	// Implement later, make sure to test and get up User Interface 1st!
+            	
+            	// Implement User interface
+            	System.out.println("Enter a option number: ");
+            	System.out.println("1) Send a Message"
+            			+ "\n2) View Chat History"
+            			+ "\n3) Create a New Group "
+            			+ "\n4) Log Out");
+            	// load in User choice into a variable
+            	int choice = sc.nextInt();
+            	// Put it into our Message Object then send it off to the Server to manage next steps
+            	Message userChoice = new Message(choice);
+            	
+            	// Send to Server
+            	objectOutputStream.writeObject(userChoice);
+            	objectOutputStream.flush();
+            	System.out.println("Sending option to Server");
+            	
+            	// load switch interface
+            	switch(choice)
+            	{
+            	case 1:
+					// This will be the sendMessage() method handler
+            		// sendMessage() will return a Message Object that we can send to the Server
+            		System.out.println("Enter First Name of Recipient: ");
+            		String toFirst = sc.next();
+            		System.out.println("Enter Last Name of Recipient: ");
+            		String toLast = sc.next();
+            		// use sc.nextLine to clear the skipping line
+            		sc.nextLine();
+            		System.out.println("Enter the Message: ");
+            		String data = sc.nextLine();
+            		
+            		// Create a Message object to be send to the Server 
+            		Message msg = new Message(clientUser.getFirstName(), clientUser.getLastName(), toFirst, toLast, data);
+            		
+            		// Send Message object to the Server
+            		objectOutputStream.writeObject(msg);
+            		objectOutputStream.flush();
+            		
+            		System.out.println("Message has been sent");
+            		
+					break;
+				case 2:
+					// This will be the chatHistory() method handler
+					System.out.println("Chat History is Below: ");
+					
+					// Sending Server Client Profile
+					objectOutputStream.writeObject(clientUser);
+					objectOutputStream.flush();
+					
+					// Read in what Server has sent back
+					
+					
+					break;
+				case 3:
+					// This will be the createGroup() method handler
+					break;
+				case 4:
+					// This will be the logOut() method handler
+					break;
+				default:
+					break;								
+            	}
+            			
             }
         }
         

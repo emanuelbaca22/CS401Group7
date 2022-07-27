@@ -1,10 +1,11 @@
+import java.io.Serializable;
+import java.net.Socket;
 // Implementation of User Parent Class
-public class User {
+public class User implements Serializable {
 	// list properties based on Design Document
 	protected String firstName;
 	protected String lastName;
 	protected int empNum;
-	//protected int empNum;
 	protected String password;
 	protected String role;
 	protected String status;
@@ -28,6 +29,7 @@ public class User {
 		this.empNum = id;
 		this.password = password;
 		this.role = role;	
+		this.status = "In-Active";
 	}
 	
 	// setters
@@ -62,7 +64,8 @@ public class User {
 	
 	// methods
 	public void sendMessage(Message msg) {
-		// Create a new Message object and send it to the server
+		// return a Message object to Client in order to send to the Sever
+		
 	}
 	
 	public void viewChats() {
