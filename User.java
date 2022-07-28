@@ -14,7 +14,6 @@ public class User implements Serializable {
 	public User () {
 		this.firstName = "N/A";
 		this.lastName = "N/A";
-		// this.empNum = 0000;
 		this.password = "N/A";
 		this.role = "User";
 		this.status = "N/A";
@@ -59,28 +58,5 @@ public class User implements Serializable {
 	
 	public String getStatus() {
 		return this.status;
-	}
-	
-	// methods
-	public void sendMessage(Message msg) {
-		// return a Message object to Client in order to send to the Sever
-	}
-	
-	public void viewChats() {
-		// Be able to retrieve all previous chat history
-	}
-	
-	public void createGroup() {
-		// Be able to create a group with Employees
-		
-	}
-	
-	public void leaveGroup() {
-		// Be able to leave a group chat
-		
-	}
-	
-	public void logOff() {
-		// Be able to log off
 	}
 }

@@ -49,7 +49,6 @@ public class Message implements Serializable{
 	{
 		this.msgSize = size;
 	}
-	// implement checkEmployeeStatus()
 	
 	// list all getter methods
 	public String getFromFirstName() {

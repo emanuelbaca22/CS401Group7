@@ -13,11 +13,4 @@ public class IT extends User{
 		// pass newly created employee to server
 		return newUser;
 	}
-	
-	// Will not implement deleteEmployee as it is not required and is extra work
-	
-	public void viewChatLog()
-	{
-		// think of a way to open the file and search for specific fields to filter log file
-	}
 }

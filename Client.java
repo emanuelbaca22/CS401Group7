@@ -144,7 +144,7 @@ public class Client extends JFrame implements ActionListener{
         	if(clientUser.getRole().equals("User"))
         	{
         		// Implement User interface
-        		System.out.println("Enter a option number: ");
+        		System.out.println("\n\nEnter a option number: ");
         		System.out.println("1) Send a Message"
         				+ "\n2) View Chat History"
         				+ "\n3) Create a New Group "
@@ -224,7 +224,7 @@ public class Client extends JFrame implements ActionListener{
         	else
         	{
         		// Implement IT Interface
-        		System.out.println("Enter a option number: ");
+        		System.out.println("\n\nEnter a option number: ");
         		System.out.println("1) Send a Message"
         				+ "\n2) View Chat History"
         				+ "\n3) Create a New Group "

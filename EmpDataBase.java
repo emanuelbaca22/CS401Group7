@@ -217,7 +217,7 @@ public class EmpDataBase {
 			if(tempFirst.equals(user.getFirstName()) && tempLast.equals(user.getLastName()))
 			{
 				// This is a String with all messages sent by passed in User Object
-				chatSent += "\n" + msgDataBase.get(i).getToFirstName() + " " +  msgDataBase.get(i).getToLastName() + " \n" + msgDataBase.get(i).getData() + "\n" + msgDataBase.get(i).getType();
+				chatSent += "\n\n" + msgDataBase.get(i).getToFirstName() + " " +  msgDataBase.get(i).getToLastName() + " \n" + msgDataBase.get(i).getData() + "\n" + msgDataBase.get(i).getType();
 			
 			}
 		}
@@ -232,7 +232,7 @@ public class EmpDataBase {
 			if(tempFirst.equals(user.getFirstName()) && tempLast.equals(user.getLastName()))
 			{
 				// This is a String with all messages sent by passed in User Object
-				chatReceived += "\n" + msgDataBase.get(i).getToFirstName() + " " +  msgDataBase.get(i).getToLastName() + " \n" + msgDataBase.get(i).getData() + "\n" + msgDataBase.get(i).getType();
+				chatReceived += "\n\n" + msgDataBase.get(i).getToFirstName() + " " +  msgDataBase.get(i).getToLastName() + " \n" + msgDataBase.get(i).getData() + "\n" + msgDataBase.get(i).getType();
 			}
 		}
 		// Return all chats sent and received 
