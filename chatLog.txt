@@ -7,3 +7,7 @@ Val Gonzalez Dave Go Testing again a different User Asynchronous
 Val Gonzalez Manny Baca Testing Message to New User Asynchronous
 Bob Smith Dave Go This is a Testing Message to Dave from Bob Asynchronous
 Bob Smith Ayumi Test Testing message to new employee Asynchronous
+Val Gonzalez Dave Go Should be an offline Message Asynchronous
+Bob Smith Val Gonzalez This is a Test Message to Val Asynchronous
+Val Gonzalez Bob Smith Message to Bob Smith Asynchronous
+Bob Smith Val Gonzalez Message Val after they logged out Asynchronous
